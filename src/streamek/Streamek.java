@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 import java.util.stream.Stream;
+import java.util.IntSummaryStatistics;
 
 /**
  *
@@ -48,14 +49,14 @@ public class Streamek {
                 .filter(p -> p.isHazas())
                 .collect(Collectors.toList());
         System.out.println(eredmeny.toString());
-        
+
         List<String> myList = Arrays.asList("a1", "a2", "b1", "c2", "c1");
         myList.stream()
                 .filter(s -> s.startsWith("c"))
                 .map(String::toUpperCase)
                 .sorted()
                 .forEach(System.out::println);
-        
+
         List<String> collection = asList("My", "name", "is", "John", "Doe");
         List<String> expected = collection
                 .stream()
@@ -71,37 +72,54 @@ public class Streamek {
                 .forEach(System.out::println);
         System.out.println("=======================================\n");
         persons.stream()
-                .filter(s->s.getEletkor()>70)
-                .filter(s->s.isHazas())
-                .map(s->s.getTestSuly()*1.2)
+                .filter(s -> s.getEletkor() > 70)
+                .filter(s -> s.isHazas())
+                .map(s -> s.getTestSuly() * 1.2)
                 .forEach(System.out::println);
         System.out.println("=======================================\n");
         persons.stream()
-               .max(Comparator.comparing(s->s.getTestSuly()))
-               .ifPresent(System.out::println);
-         System.out.println("=======================================\n");
+                .max(Comparator.comparing(s -> s.getTestSuly()))
+                .ifPresent(System.out::println);
+        System.out.println("=======================================\n");
         persons.stream()
-                .filter(p->p.getEletkor()<18)
-                .map(s->{
-                    return s.getV_nev()+" "+s.getK_nev()+" "+s.getEletkor();
+                .filter(p -> p.getEletkor() < 18)
+                .map(s -> {
+                    return s.getV_nev() + " " + s.getK_nev() + " " + s.getEletkor();
                 })
                 .sorted()
                 .forEach(System.out::println);
         System.out.println("=======================================\n");
-    Collections.sort(collection, 
-            (String s1, String s2)->{
-                return (s1.length()-s2.length());
-            });
-    System.out.println("=======================================\n");
-    persons.stream()
-            .filter(p->p.getV_nev().startsWith("T"))
-            .map(s->{return s.getEletkor()+" "+s.getTestSuly();})
-            .forEach(System.out::println);
-    System.out.println("=======================================\n");   
-    Integer ossz= persons
-            .stream()
-            .reduce(0, (eletkor, p)->eletkor+=p.getEletkor(), 
-                    (s1,s2)->s1+s2);
-    System.out.println(ossz);
-    } 
+        Collections.sort(collection,
+                (String s1, String s2) -> {
+                    return (s1.length() - s2.length());
+                });
+        System.out.println("=======================================\n");
+        persons.stream()
+                .filter(p -> p.getV_nev().startsWith("T"))
+                .map(s -> {
+                    return s.getEletkor() + " " + s.getTestSuly();
+                })
+                .forEach(System.out::println);
+        System.out.println("=======================================\n");
+        Integer ossz = persons
+                .stream()
+                .reduce(0, (eletkor, p) -> eletkor += p.getEletkor(),
+                        (s1, s2) -> s1 + s2);
+        System.out.println(ossz);
+        System.out.println("=======================================\n");
+        System.out.println("Eletkoros\n");
+        IntSummaryStatistics stat=persons.stream()
+                .mapToInt(Persons::getEletkor)
+                .summaryStatistics();
+        System.out.println(stat);
+        
+        
+        System.out.println("\nEletkoros 2\n");
+        IntSummaryStatistics stat2=persons.stream()
+                .mapToInt(s->{
+                return s.getEletkor();})
+                .summaryStatistics();
+        System.out.println(stat2);
+        System.out.println("=======================================\n");
+    }
 }
